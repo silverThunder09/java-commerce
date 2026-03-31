@@ -1,9 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
-
 public class Product {
-
-    List<Product> products = new ArrayList<>();
 
     String name;
     int price;
