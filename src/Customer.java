@@ -1,7 +1,7 @@
 public class Customer {
-    String name;
-    String email;
-    String rating;
+    private String name;
+    private String email;
+    private String rating;
 
 
     public Customer(String name, String email, String rating) {
