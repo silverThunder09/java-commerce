@@ -3,8 +3,8 @@ import java.util.List;
 
 public class Category {
 
-    String categoryName;
-    List<Product> products;
+    private String categoryName;
+    private List<Product> products;
 
     public Category(String categoryName) {
         this.categoryName = categoryName;
