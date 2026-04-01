@@ -24,7 +24,7 @@ public class CommerceSystem {
             }
             System.out.println("0. 종료      | 프로그램 종료");
 
-            int inputNum = sc.nextInt();
+            int inputNum = getMenuInput(sc, 0, categories.size());
 
             if (inputNum == 0) {
                 System.out.println("커머스 플랫폼을 종료합니다.");
@@ -49,7 +49,7 @@ public class CommerceSystem {
             }
             System.out.println("0. 뒤로가기");
 
-            int inputNum = sc.nextInt();
+            int inputNum = getMenuInput(sc, 0, products.size());
 
             if (inputNum == 0) {
                 break;
@@ -60,6 +60,24 @@ public class CommerceSystem {
                 break;
             }
         }
+    }
 
+    private int getMenuInput(Scanner sc, int min, int max) {
+        while (true) {
+            try {
+                int input = sc.nextInt();
+
+                if (input < min || input > max) {
+                    System.out.printf("%d ~ %d 사이의 숫자를 입력해주세요.%n", min, max);
+                    continue;
+                }
+
+                return input;
+
+            } catch (Exception e) {
+                System.out.println("잘못된 입력입니다 다시 입력해주세요.");
+                sc.nextLine();
+            }
+        }
     }
 }
