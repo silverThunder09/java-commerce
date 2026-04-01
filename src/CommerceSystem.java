@@ -49,7 +49,7 @@ public class CommerceSystem {
             }
             System.out.println("0. 뒤로가기");
 
-            int inputNum = getMenuInput(sc, 0, categories.size());
+            int inputNum = getMenuInput(sc, 0, products.size());
 
             if (inputNum == 0) {
                 break;
