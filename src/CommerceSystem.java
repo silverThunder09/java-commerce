@@ -34,8 +34,10 @@ public class CommerceSystem {
                     displayProducts(sc, categories.get(inputNum - 1));
                 } else if (inputNum == 4) {
                     // 장바구니 확인 기능
+                    CartCheckout(sc);
                 } else if (inputNum == 5) {
-                    // 주문하기 기능
+                    // 주문 취소
+                    cancelOrder();
                 }
 
             } catch (RuntimeException e) {
@@ -46,7 +48,7 @@ public class CommerceSystem {
     }
 
     // 메인 메뉴 출력
-    public void displayMain() {
+    private void displayMain() {
         System.out.println("\n 아래 메뉴를 선택해주세요.");
         System.out.println("\n[ 실시간 커머스 플랫폼 메인 ]");
         for (int i = 0; i < categories.size(); i++) {
@@ -55,12 +57,13 @@ public class CommerceSystem {
         System.out.println("0. 종료      | 프로그램 종료");
 
         if (!cart.isEmpty()) {
-            System.out.println("[  주문 관리 ]");
+            System.out.println("\n[ 주문 관리 ]");
             System.out.println("4. 장바구니 확인      | 장바구니를 확인 후 주문합니다.");
             System.out.println("5. 주문 취소         | 진행중인 주문을 취소합니다.");
         }
     }
 
+    // 상품 메뉴 출력
     private void displayProducts(Scanner sc, Category category) {
         while (true) {
 
@@ -102,6 +105,66 @@ public class CommerceSystem {
         }
     }
 
+    // 장바구니 확인 기능
+    private void CartCheckout(Scanner sc) {
+        System.out.println("\n 아래와 같이 주문 하시겠습니까?");
+        System.out.println("\n[ 장바구니 내역 ]");
+
+        for (CartItem item : cart.getCartItemList()) {
+            Product p = item.getProduct();
+            System.out.printf("%s | %,d원 | %s | 수량: %d개%n", p.getName(), p.getPrice(), p.getDescription(), item.getQuantity());
+        }
+
+        System.out.println("\n[ 총 주문 금액 ]");
+        System.out.printf("%,d원%n", cart.calculateTotalPrice());
+        System.out.println("1. 주문 확정      2. 메인으로 돌아가기");
+
+        int choice = getMenuInput(sc, 1, 2);
+
+        if (choice == 1) {
+            // 주문 확정 기능
+            confirmOrder();
+        }
+    }
+
+    //  주문 확정 기능
+    private void confirmOrder() {
+
+        int totalPrice = cart.calculateTotalPrice();
+        boolean allSuccess = true;
+
+        for (CartItem cartItem : cart.getCartItemList()) {
+            Product p = cartItem.getProduct();
+            int before = p.getStock();
+            boolean success = p.reduceStock(cartItem.getQuantity());
+
+            if (!success) {
+                System.out.printf("%s 재고 부족으로 처리 실패%n", p.getName());
+                allSuccess = false;
+            }
+        }
+
+        if (allSuccess) {
+            System.out.printf("주문이 완료되었습니다! 총 금액: %,d원%n", totalPrice);
+            for (CartItem cartItem : cart.getCartItemList()) {
+                Product p = cartItem.getProduct();
+                System.out.printf("%s 재고가 %d개 → %d개로 업데이트되었습니다.%n",
+                        p.getName(), p.getStock() + cartItem.getQuantity(), p.getStock());
+            }
+            cart.cartClear();
+        } else {
+            System.out.println("일부 상품의 재고가 부족합니다. 장바구니를 확인해주세요.");
+        }
+    }
+
+    // 주문 취소 기능
+    private void cancelOrder() {
+        cart.cartClear();
+        System.out.println("주문이 취소되었습니다. 장바구니가 비워졌습니다.");
+    }
+
+
+    // 예외 처리
     private int getMenuInput(Scanner sc, int min, int max) {
         while (true) {
             try {
