@@ -7,6 +7,13 @@ public class Cart {
     private List<CartItem> cartItemList = new ArrayList<>();
 
     public void addItem(Product product, int quantity) {
+
+        for(CartItem item : cartItemList) {
+            if(item.getProduct().getName().equals(product.getName())) {
+                item.setQuantity(item.getQuantity() + quantity);
+                return;
+            }
+        }
         cartItemList.add(new CartItem(product,quantity));
     }
 
@@ -20,6 +27,8 @@ public class Cart {
             total += cartItem.getTotalPrice();
         }
         return  total;
+
+
     }
 
     // 비어있는지 확인
