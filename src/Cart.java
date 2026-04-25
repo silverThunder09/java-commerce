@@ -27,8 +27,6 @@ public class Cart {
             total += cartItem.getTotalPrice();
         }
         return  total;
-
-
     }
 
     // 비어있는지 확인
